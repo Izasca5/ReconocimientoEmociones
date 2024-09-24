@@ -122,30 +122,11 @@ public class Main
             int contador=0;
             while (sc.hasNextLine())
             {
-                String linea=sc.nextLine();
-                String palabraActual="";
-                String[] palabras=new String[linea.length()];
 
-                for(int i=0;i<linea.length();i++)
-                {
-                    if(linea.charAt(i)==' ')
-                    {
-                        palabras[contador]=palabraActual;
-                    }
-                    palabraActual+=linea.charAt(i);
-                }
-                lineas.add(palabras);
-                contador++;
+
+
             }
-            sc.close();
-            for(String[] linea:lineas)
-            {
-                for(String palabra:linea)
-                {
-                    pw.println(palabra);
-                }
-            }
-            pw.close();
+
 
         }
         catch (FileNotFoundException e)
