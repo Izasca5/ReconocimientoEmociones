@@ -47,7 +47,7 @@ public class InterfazGrafica extends Frame {
                 } catch (NumberFormatException exception) {
                     System.err.println("Error: El String no es un número válido.");
                 }
-                System.out.println("Valores btenidos correctamente");
+                System.out.println("Valores obtenidos correctamente");
             }
         });
     }

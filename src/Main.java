@@ -1,8 +1,13 @@
 import java.awt.*;
+import java.io.*;
+import java.text.Normalizer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
+
 public class Main
 {
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) throws FileNotFoundException {
         //Crea la interfaz grafica
         InterfazGrafica interfaz = new InterfazGrafica();
 
@@ -11,11 +16,14 @@ public class Main
         //Guarda la puntuación de dicha resena
         int puntuacion = interfaz.getPuntuacion();
 
+
+        //analisisFichero("C:\\Users\\izana\\IdeaProjects\\ReconocimientoEmociones\\src\\BaseDeDatosResenas.txt","C:\\Users\\izana\\IdeaProjects\\ReconocimientoEmociones\\src\\BaseDeDatosResenasClean.txt");
+
         calcularPuntuacion(resena);
 
         anadirNuevosDatos(resena, puntuacion);
 
-
+        crearTabla("C:\\Users\\izana\\IdeaProjects\\ReconocimientoEmociones\\src\\BaseDeDatosResenasClean.txt","C:\\Users\\izana\\IdeaProjects\\ReconocimientoEmociones\\src\\tablaPalabras");
 
     }
 
@@ -23,7 +31,12 @@ public class Main
 
     private static void calcularPuntuacion(String resena)
     {
+        String[] palabras= filtrarYSeparar(resena);
+    }
 
+    private static String[] filtrarYSeparar(String resena)
+    {
+        return null;
     }
 
     private static void anadirNuevosDatos(String resena, int puntuacion)
@@ -66,5 +79,79 @@ public class Main
         array[end] = temp;
 
         return i;
+    }
+    public static void analisisFichero(String pNombre, String pNombreEscribe) {
+        int i=0;
+        try{
+            Scanner sc=new Scanner(new File(pNombre));
+            PrintWriter pw=new PrintWriter(new FileWriter(pNombreEscribe));
+
+            while(sc.hasNextLine()){
+                String linea=sc.nextLine();
+                linea=cleanString(linea);
+                linea=linea.toLowerCase();
+                linea=linea.replaceAll("[^a-z1-9$ ]", "");
+                pw.println(linea);
+                i++;
+            }
+            sc.close();
+            pw.close();
+        }catch (FileNotFoundException e){
+            System.err.println("No se ha podido leer el fichero: "+pNombre);
+        } catch (IOException e) {
+            System.err.println("No se ha podido leer el fichero: "+pNombre);
+            throw new RuntimeException(e);
+        }
+        System.out.println(i);
+
+    }
+    public static String cleanString(String texto) {
+        texto = Normalizer.normalize(texto, Normalizer.Form.NFD);
+        texto = texto.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        return texto;
+    }
+
+    public static void crearTabla(String nombre, String nombreSalida) throws FileNotFoundException {
+        ArrayList<String[]> lineas = new ArrayList<>();
+        try
+        {
+            //Busca los ficheros y los abre
+            Scanner sc = new Scanner(new File(nombre));
+            PrintWriter pw = new PrintWriter(nombreSalida);
+
+            int contador=0;
+            while (sc.hasNextLine())
+            {
+                String linea=sc.nextLine();
+                String palabraActual="";
+                String[] palabras=new String[linea.length()];
+
+                for(int i=0;i<linea.length();i++)
+                {
+                    if(linea.charAt(i)==' ')
+                    {
+                        palabras[contador]=palabraActual;
+                    }
+                    palabraActual+=linea.charAt(i);
+                }
+                lineas.add(palabras);
+                contador++;
+            }
+            sc.close();
+            for(String[] linea:lineas)
+            {
+                for(String palabra:linea)
+                {
+                    pw.println(palabra);
+                }
+            }
+            pw.close();
+
+        }
+        catch (FileNotFoundException e)
+        {
+            System.err.println("No se ha podido crear el fichero: "+nombre);
+        }
+
     }
 }
